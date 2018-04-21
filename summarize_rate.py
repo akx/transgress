@@ -22,7 +22,7 @@ def main():
 
     args = ap.parse_args()
 
-    with open(args, 'r') as jf:
+    with open(args.file, 'r') as jf:
         j_data = json.load(jf)
 
     sum_data = [(', '.join(j[0]['routes']), j[0]['shape_id'], j[1]) for j in j_data]
