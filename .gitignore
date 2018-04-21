@@ -1,0 +1,5 @@
+*.qg*
+*json
+.idea
+.ipynb_checkpoints
+gtfs-turku*
