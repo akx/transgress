@@ -74,7 +74,8 @@ def cli():
     ap.add_argument('--output-json', '-o', default='route-rate.json')
     ap.add_argument('--distance-threshold', '-d', type=float, default=40)
     ap.add_argument('--source-proj', default='EPSG:4326')  # WGS 84
-    ap.add_argument('--measurement-proj', default='EPSG:32634')  # UTM zone 34 N (http://www.dmap.co.uk/utmworld.htm)
+    ap.add_argument('--measurement-proj', default='EPSG:3067')  # ETRS-TM35FIN (only for Finland)
+    # Also try "EPSG:32634" ( UTM zone 34 N (http://www.dmap.co.uk/utmworld.htm)) for measurement
     args = ap.parse_args()
     project_to_meters = partial(
         pyproj.transform,
