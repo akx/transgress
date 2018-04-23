@@ -12,19 +12,21 @@ from tqdm import tqdm
 def dump_json(routes_and_points, filename):
     with open(filename, 'w') as outf:
         j_data = [
-            (
-                route.properties,
-                len(matching_points),
-                [dict(p['point'].properties, distance=p['distance']) for p in matching_points],
-            )
-            for (route, matching_points)
+            {
+                'route': d['route'].properties,
+                'n_points': len(d['points']),
+                'length': d['length'],
+                's_length': d['s_length'],
+                'points': [dict(p['point'].properties, distance=p['distance']) for p in d['points']],
+            }
+            for d
             in routes_and_points
         ]
-        j_data.sort(key=lambda r: r[1], reverse=True)
+        j_data.sort(key=lambda r: r['n_points'], reverse=True)
         json.dump(j_data, outf, indent=1, sort_keys=True)
 
 
-def calculate_best(distance_threshold, points, routes):
+def calculate_best(distance_threshold, points, routes, simplify_threshold=5):
     routes_and_points = []
     with tqdm(routes, desc='Calculating') as routes_iter:
         for route in routes_iter:
@@ -39,8 +41,13 @@ def calculate_best(distance_threshold, points, routes):
                 for point in points
                 if point_distance_buffered_route.contains(point)
             ]
-            routes_and_points.append((route, matching_points))
-            routes_iter.set_postfix_str('Best: %d' % max(len(rp[1]) for rp in routes_and_points))
+            routes_and_points.append({
+                'route': route,
+                'points': matching_points,
+                'length': route.length,
+                's_length': route.simplify(simplify_threshold).length,
+            })
+            routes_iter.set_postfix_str('Best: %d' % max(len(rp['points']) for rp in routes_and_points))
     return routes_and_points
 
 
