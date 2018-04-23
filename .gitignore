@@ -1,5 +1,6 @@
+*.hdf5
 *.qg*
+*.zip
 *json
 .idea
 .ipynb_checkpoints
-gtfs-turku*
